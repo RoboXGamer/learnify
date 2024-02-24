@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect("/login");
+}
+
+const username = user.username;
+---
+
+<Layout title="Dashboard Page">
+  <h1>
+    {username}
+  </h1>
+  <form method="post" action="/api/logout">
+    <button>Sign out</button>
+  </form>
+</Layout>
