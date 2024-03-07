@@ -1,7 +1,7 @@
-import { lucia } from "../../lib/auth";
+import { lucia } from "@/lib/auth";
 import { generateId } from "lucia";
 import { Argon2id } from "oslo/password";
-import { createNewUser } from "../../lib/db";
+import { createNewUser } from "@/lib/db/controllers/user.controller";
 
 import type { APIContext } from "astro";
 

@@ -1,6 +1,6 @@
-import { lucia } from "../../lib/auth";
+import { lucia } from "@/lib/auth";
 import { Argon2id } from "oslo/password";
-import { findUserByUsername } from "../../lib/db";
+import { findUserByUsername } from "@/lib/db/controllers/user.controller";
 
 import type { APIContext } from "astro";
 
