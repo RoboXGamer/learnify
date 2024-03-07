@@ -45,7 +45,8 @@ async function addSubject({
   userId: string;
   subjectName: string;
 }) {
-  if (!userId || !subjectName) return { success: false };
+  if (!userId || !subjectName)
+    return { success: false, msg: "Required fields missing" };
   // Create the slug
   const slug = subjectName.trim().toLowerCase().replaceAll(" ", "-");
   try {
@@ -62,13 +63,14 @@ async function addSubject({
           success: false,
           msg: "Subject already added to user",
         };
+      } else {
+        // Add the subject to the user
+        const userSubject = await linkSubjectToUser({
+          userId,
+          subjectId: subjectId.toString(),
+        });
+        return userSubject;
       }
-      // Add the subject to the user
-      linkSubjectToUser({
-        userId,
-        subjectId: subjectId.toString(),
-      });
-      return linkSubjectToUser;
     } else {
       // since the subject does not exist create it
       const newSubject = await Subject.create({ name: subjectName, slug });
