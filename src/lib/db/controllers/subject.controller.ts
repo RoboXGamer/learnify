@@ -1,6 +1,29 @@
 import { UserSubject } from "@/lib/db/models/user-subject.model";
 import { Subject } from "@/lib/db/models/subject.model";
 
+async function linkSubjectToUser({
+  userId,
+  subjectId,
+}: {
+  userId: string;
+  subjectId: string;
+}) {
+  const userSubject = await UserSubject.create({
+    user_id: userId,
+    subject_id: subjectId,
+  });
+  if (userSubject === null) {
+    return {
+      success: false,
+      msg: "Failed to add subject to user",
+    };
+  }
+  return {
+    success: true,
+    msg: "Subject added successfully",
+  };
+}
+
 async function getSubjectsList(userId: string) {
   try {
     if (!userId) return [];
@@ -24,13 +47,7 @@ async function addSubject({
 }) {
   if (!userId || !subjectName) return { success: false };
   // Create the slug
-  const slug = subjectName
-    .trim()
-    .toLowerCase()
-    // Replace spaces with hyphens
-    .replaceAll(" ", "-");
-  // console.log({ slug });
-  // Check for existing subject
+  const slug = subjectName.trim().toLowerCase().replaceAll(" ", "-");
   try {
     const existingSubject = await Subject.findOne({ slug });
     if (existingSubject) {
@@ -47,43 +64,27 @@ async function addSubject({
         };
       }
       // Add the subject to the user
-      const userSubject = await UserSubject.create({
-        user_id: userId,
-        subject_id: subjectId,
+      linkSubjectToUser({
+        userId,
+        subjectId: subjectId.toString(),
       });
-      if (userSubject === null) {
+      return linkSubjectToUser;
+    } else {
+      // since the subject does not exist create it
+      const newSubject = await Subject.create({ name: subjectName, slug });
+      if (newSubject === null) {
         return {
           success: false,
-          msg: "Failed to add subject to user",
+          msg: "Failed to add subject",
         };
       }
-      return {
-        success: true,
-        msg: "Subject added successfully",
-      };
+      // Add the subject to the user
+      const userSubject = await linkSubjectToUser({
+        userId,
+        subjectId: newSubject._id.toString(),
+      });
+      return userSubject;
     }
-    const temp = await Subject.create({ name: subjectName, slug });
-    if (temp === null) {
-      return {
-        success: false,
-        msg: "Failed to add subject",
-      };
-    }
-    // Add the subject to the user
-    const userSubject = await UserSubject.create({
-      user_id: userId,
-      subject_id: temp._id,
-    });
-    if (userSubject === null) {
-      return {
-        success: false,
-        msg: "Failed to add subject to user",
-      };
-    }
-    return {
-      success: true,
-      msg: "Subject added successfully",
-    };
   } catch (error) {
     console.log(error);
     return {
