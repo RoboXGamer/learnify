@@ -1,0 +1,34 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getSubjectDetails } from "@/lib/db/controllers/subject.controller";
+
+const { subjectSlug } = Astro.params;
+const subject = await getSubjectDetails(subjectSlug!);
+---
+
+<Layout title=`Learnify App | Subject | ${subjectSlug}`>
+  <h1>{`Learnify App | Subject | ${subjectSlug}`}</h1>
+  <p>Subject Details</p>
+  <p>{subject?.description}</p>
+  <p>{subject?.id}</p>
+  <p>{subject?.name}</p>
+  <button type="button" id="delete-subject" data-id={subject?.id}>Delete</button
+  >
+</Layout>
+
+<script>
+  const deleteButton = document.getElementById("delete-subject")!;
+  deleteButton.addEventListener("click", async () => {
+    const response = await fetch("/api/db/subject", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ subjectId: deleteButton.dataset?.id }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete subject");
+    }
+    window.location.href = "/dashboard/subjects";
+  });
+</script>

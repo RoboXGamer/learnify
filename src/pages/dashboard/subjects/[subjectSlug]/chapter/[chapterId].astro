@@ -1,0 +1,15 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const { subjectId, chapterId } = Astro.params;
+---
+
+<Layout title=`Learnify App | Chapter | ${chapterId}`>
+  <p>
+    Learnify App
+    <br />
+    Subject : {subjectId}
+    <br />
+    Chapters : {chapterId}
+  </p>
+</Layout>

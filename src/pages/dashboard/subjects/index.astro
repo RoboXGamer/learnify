@@ -1,0 +1,46 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import CardGrid from "@/components/CardsGrid.astro";
+import { getSubjectsList } from "@/lib/db/controllers/subject.controller";
+
+const subjectsList = await getSubjectsList(Astro.locals.session?.userId!);
+---
+
+<Layout title="Learnify App | Subjects">
+  <h1>Learnify App | Subjects</h1>
+  <p>Subjects List</p>
+  <CardGrid data={subjectsList} />
+  <form id="add-subject">
+    <label for="name">Subject Name:</label>
+    <input type="text" id="name" name="name" />
+    <button type="submit"> Add Subjects</button>
+  </form>
+</Layout>
+
+<script>
+  const addSubjectForm = document.getElementById(
+    "add-subject"
+  ) as HTMLFormElement;
+  addSubjectForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(addSubjectForm);
+    const response = await fetch("/api/db/subject", {
+      method: "POST",
+      body: formData,
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.msg || "Failed to add subject");
+    }
+
+    if (data.success === false) {
+      // TODO: Show error message
+      console.log(data);
+    } else {
+      // TODO: Show success message
+      console.log(data);
+      window.location.reload();
+    }
+  });
+</script>

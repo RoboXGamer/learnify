@@ -1,0 +1,14 @@
+---
+import type { SubjectAttributes } from "@/lib/db/models/subject.model";
+import Card from "./Card.astro";
+const { data } = Astro.props;
+---
+
+<section class="grid p-2">
+  <ul
+    class="grid grid-cols-2 gap-4 p-4 md:grid-cols-3 lg:grid-cols-4 place-items-center"
+  >
+    {data.length === 0 && <p>No subjects found</p>}
+    {data.map((subject: SubjectAttributes) => <Card subject={subject} />)}
+  </ul>
+</section>

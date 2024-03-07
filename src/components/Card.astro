@@ -1,0 +1,12 @@
+---
+const props = Astro.props;
+const { subject } = props;
+---
+
+<li
+  class="grid place-items-center py-3 border-2 border-blue-900 rounded w-full h-full"
+>
+  <a href={`/dashboard/subjects/${subject.slug}`}>
+    <h1>{subject.name}</h1>
+  </a>
+</li>
