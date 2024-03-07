@@ -6,14 +6,25 @@ if (!user) {
   return Astro.redirect("/login");
 }
 
-const username = user.username;
+let username = user.username;
+username = username[0].toUpperCase() + username.slice(1);
 ---
 
 <Layout title="Learnify App | Dashboard">
-  <h1>
-    Welcome Back, {username}
-  </h1>
-  <form method="post" action="/api/logout">
-    <button>Sign out</button>
-  </form>
+  <main class="flex flex-col gap-2 items-start p-4">
+    <h1>
+      Welcome Back, {username}
+    </h1>
+    <form method="POST" action="/api/logout">
+      <button class="p-2 bg-slate-500 px-4 rounded-md hover:bg-slate-600">
+        Sign out
+      </button>
+    </form>
+    <a
+      href="/dashboard/subjects"
+      class="p-2 bg-slate-500 px-4 rounded-md hover:bg-slate-600"
+    >
+      See All Subjects
+    </a>
+  </main>
 </Layout>

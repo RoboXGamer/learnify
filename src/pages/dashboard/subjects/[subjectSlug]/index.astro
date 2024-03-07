@@ -1,4 +1,8 @@
 ---
+const user = Astro.locals.user;
+if (!user) {
+  return Astro.redirect("/login");
+}
 import Layout from "@/layouts/Layout.astro";
 import { getSubjectDetails } from "@/lib/db/controllers/subject.controller";
 
